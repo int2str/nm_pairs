@@ -1,0 +1,27 @@
+cxx = clang++
+
+builddir = build
+
+cflags = -O3 -g -std=c++23 -Wextra -Wconversion -Wall -pedantic -Werror
+
+rule cxx
+    command = $cxx -MMD -MF $out.d $cflags -c $in -o $out
+    description = C++ $out
+    depfile = $out.d
+
+rule link
+    command = $cxx $cflags $ldflags -o $out $in $libs
+    description = LNK $out
+
+rule compdb
+    command = ninja -t compdb > $out
+    generator = true
+
+build $builddir/demo: link $builddir/demo.o
+build $builddir/demo.o: cxx demo.cc
+
+build $builddir/bubble_sort: link $builddir/bubble_sort.o
+build $builddir/bubble_sort.o: cxx bubble_sort.cc
+
+build compile_commands.json: compdb | build.ninja
+
