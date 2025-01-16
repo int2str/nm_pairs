@@ -31,6 +31,9 @@
 #include <utility>
 
 template <std::ranges::forward_range RANGE>
+struct nm_sentinel {};
+
+template <std::ranges::forward_range RANGE>
 class nm_iterator {
   using base_iterator   = std::ranges::iterator_t<RANGE>;
   using base_sentinel   = std::ranges::sentinel_t<RANGE>;
@@ -69,22 +72,9 @@ class nm_iterator {
 
   [[nodiscard]] constexpr auto operator<=>(const nm_iterator&) const = default;
 
-  [[nodiscard]] constexpr auto is_valid() const -> bool {
+  [[nodiscard]] constexpr auto operator==(
+      const nm_sentinel<RANGE>& /*unused*/) const -> bool {
     return n_ != end_ and m_ != end_;
-  }
-};
-
-template <std::ranges::forward_range RANGE>
-class nm_sentinel {
- public:
-  [[nodiscard]] constexpr auto operator==(const nm_sentinel& /*unused*/) const
-      -> bool {
-    return true;
-  }
-
-  [[nodiscard]] constexpr auto operator==(const nm_iterator<RANGE>& rhs) const
-      -> bool {
-    return !rhs.is_valid();
   }
 };
 
