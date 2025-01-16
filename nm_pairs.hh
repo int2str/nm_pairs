@@ -74,7 +74,7 @@ class nm_iterator {
 
   [[nodiscard]] constexpr auto operator==(
       const nm_sentinel<RANGE>& /*unused*/) const -> bool {
-    return n_ != end_ and m_ != end_;
+    return n_ == end_ or m_ == end_;
   }
 };
 
